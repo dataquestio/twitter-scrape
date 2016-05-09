@@ -1,0 +1,6 @@
+.idea/
+.DS_Store
+.pyc
+private.py
+__pycache__
+stream.db

@@ -1,0 +1,9 @@
+tweepy
+ipython
+matplotlib
+scipy
+numpy
+pandas
+dataset
+psycopg2
+textblob
