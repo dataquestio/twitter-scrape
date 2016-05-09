@@ -2,6 +2,8 @@ import settings
 import tweepy
 import dataset
 from textblob import TextBlob
+from sqlalchemy.exc import ProgrammingError
+import json
 
 db = dataset.connect(settings.CONNECTION_STRING)
 
@@ -26,23 +28,32 @@ class StreamListener(tweepy.StreamListener):
         blob = TextBlob(text)
         sent = blob.sentiment
 
-        table = db['election']
-        table.insert(dict(
-            user_description=description,
-            user_location=loc,
-            coordinates=coords,
-            text=text,
-            geo=geo,
-            user_name=name,
-            user_created=user_created,
-            user_followers=followers,
-            id_str=id_str,
-            created=created,
-            retweet_count=retweets,
-            user_bg_color=bg_color,
-            polarity=sent.polarity,
-            subjectivity=sent.subjectivity,
-        ))
+        if geo is not None:
+            geo = json.dumps(geo)
+
+        if coords is not None:
+            coords = json.dumps(coords)
+
+        table = db[settings.TABLE_NAME]
+        try:
+            table.insert(dict(
+                user_description=description,
+                user_location=loc,
+                coordinates=coords,
+                text=text,
+                geo=geo,
+                user_name=name,
+                user_created=user_created,
+                user_followers=followers,
+                id_str=id_str,
+                created=created,
+                retweet_count=retweets,
+                user_bg_color=bg_color,
+                polarity=sent.polarity,
+                subjectivity=sent.subjectivity,
+            ))
+        except ProgrammingError as err:
+            print(err)
 
     def on_error(self, status_code):
         if status_code == 420:
