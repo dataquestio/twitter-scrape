@@ -1,5 +1,5 @@
-TRACK_TERMS = ["trump", "clinton", "sanders"]
-CONNECTION_STRING = "postgresql://vik@localhost:5432/twitter"
+TRACK_TERMS = ["trump", "clinton", "sanders", "hillary clinton", "bernie", "donald trump"]
+CONNECTION_STRING = ""
 CSV_NAME = "tweets.csv"
 TABLE_NAME = "election"
 
